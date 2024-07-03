@@ -1,3 +1,4 @@
 *.env
 toonel/
 test.py
+.idea/
