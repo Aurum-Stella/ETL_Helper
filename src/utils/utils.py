@@ -18,7 +18,11 @@ def read_sql_file(sql_file_name):
 
 
 def get_periods_days(start_period, step_day, end_period=str(date.today())):
-    start_period = datetime.strptime(start_period, '%Y-%m-%d')
+    if isinstance(start_period, int):
+        start_period = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - relativedelta(
+            days=start_period)
+    else:
+        start_period = datetime.strptime(start_period, '%Y-%m-%d')
     end_period = datetime.strptime(end_period, '%Y-%m-%d')
 
     periods = []
@@ -42,7 +46,12 @@ def get_periods_days(start_period, step_day, end_period=str(date.today())):
 
 
 def get_periods_month(start_period, step_month, end_period=str(date.today())):
-    start_period = datetime.strptime(start_period, '%Y-%m-%d')
+    if isinstance(start_period, int):
+        start_period = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - relativedelta(
+            months=start_period)
+    else:
+        start_period = datetime.strptime(start_period, '%Y-%m-%d')
+    print(start_period)
     end_period = datetime.strptime(end_period, '%Y-%m-%d')
 
     # print(start_period, end_period)
@@ -50,16 +59,16 @@ def get_periods_month(start_period, step_month, end_period=str(date.today())):
 
     while periods[-1]['start_period'].replace(day=1) + relativedelta(months=step_month) <= end_period.replace(day=1):
         periods.append({'start_period': periods[-1]['start_period'].replace(day=1) +
-                       relativedelta(months=step_month)})
+                                        relativedelta(months=step_month)})
     for i in periods:
-        i['end_period'] = i['start_period'].replace(day=1) + relativedelta(months=step_month) - timedelta(microseconds=1)
-    periods[-1]['end_period'] = end_period + relativedelta(days=step_month) - timedelta(microseconds=1)
+        i['end_period'] = i['start_period'].replace(day=1) + relativedelta(months=step_month) - timedelta(
+            microseconds=1)
+    periods[-1]['end_period'] = end_period + relativedelta(days=1) - timedelta(microseconds=1)
 
     [print(i) for i in periods]
     # Если нужно возвращать список кортежей
     list_of_periods = [tuple(d[key] for key in d) for d in periods]
     return list_of_periods
-
 
 
 class WriteDataToFile:
