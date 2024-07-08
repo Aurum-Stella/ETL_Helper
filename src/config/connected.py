@@ -30,7 +30,7 @@ class Settings:
 
     @property
     def database_url(self) -> str:
-        if self.prefix_name_base == 'SRC_M':
+        if self.prefix_name_base == 'MAUTIC':
             return f"mysql+pymysql://{self.DB_USER}:{quote(self.DB_PASSWORD)}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_DB_NAME}"
         else:
             return f"postgres://{self.DB_USER}:{quote(self.DB_PASSWORD)}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_DB_NAME}"

@@ -11,16 +11,15 @@ def read_sql_file(sql_file_name):
     # Функція для зчитування SQL файлів
 
     with open(f'{project_root}/src/etl/sql/{sql_file_name}', 'r', encoding='utf-8') as file:
-        db_name = file.readline()[2:-1]
         sql_query = file.read()
 
-        return sql_query, db_name
+        return sql_query
 
 
 def get_periods_days(start_period, step_day, end_period=str(date.today())):
+
     if isinstance(start_period, int):
-        start_period = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - relativedelta(
-            days=start_period)
+        start_period = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - relativedelta(days=start_period)
     else:
         start_period = datetime.strptime(start_period, '%Y-%m-%d')
     end_period = datetime.strptime(end_period, '%Y-%m-%d')
@@ -46,9 +45,9 @@ def get_periods_days(start_period, step_day, end_period=str(date.today())):
 
 
 def get_periods_month(start_period, step_month, end_period=str(date.today())):
+
     if isinstance(start_period, int):
-        start_period = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - relativedelta(
-            months=start_period)
+        start_period = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - relativedelta(months=start_period)
     else:
         start_period = datetime.strptime(start_period, '%Y-%m-%d')
     print(start_period)
@@ -92,7 +91,7 @@ class WriteDataToFile:
         def open_file(rows):
             self.file_name = self.give_name_file(format_file='csv')
 
-            with open(f'{project_root}/src/utils/csv/{self.file_name}', 'a', newline='') as file:
+            with open(f'{project_root}/src/utils/csv_to/{self.file_name}', 'a', newline='') as file:
                 file_writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 [file_writer.writerow(row) for row in rows]
 
@@ -104,11 +103,10 @@ class WriteDataToFile:
         def open_file(rows):
             self.file_name = self.give_name_file()
 
-            with open(f'{project_root}/src/utils/csv/{self.file_name}', 'a', newline='') as file:
+            with open(f'{project_root}/src/utils/csv_to/{self.file_name}', 'a', newline='') as file:
                 file_writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 [file_writer.writerow(row) for row in rows]
 
         for rows in self.data:
             open_file(rows)
             self.num_rows += 1
-

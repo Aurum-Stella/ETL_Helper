@@ -1,7 +1,6 @@
 import sys
 import time
 import asyncio
-from src.etl.extract import Extract
 from src.utils.utils import get_periods_days, get_periods_month, WriteDataToFile
 from src.config.connected import Settings
 import asyncpg

@@ -1,5 +1,6 @@
 psycopg-binary
 psycopg
+psycopg[pool]
 asyncpg
 boto3==1.34.128
 python-dotenv==1.0.1
