@@ -19,20 +19,24 @@ class Settings:
         if None in [self.DB_HOST, self.DB_DB_NAME, self.DB_USER, self.DB_PASSWORD, self.DB_PORT]:
             raise ValueError("Some required environment variables are missing")
 
-    def database_connect(self) -> psycopg.connect:
-        return (
-            f"host={self.DB_HOST} "
-            f"dbname={self.DB_DB_NAME} "
-            f"user={self.DB_USER} "
-            f"password={self.DB_PASSWORD} "
-            f"port={self.DB_PORT}"
-        )
+    @property
+    def database_connect(self):
+        return {
+            'host': self.DB_HOST,
+            'database': self.DB_DB_NAME,
+            'user': self.DB_USER,
+            'password': self.DB_PASSWORD,
+            'port': self.DB_PORT
+        }
+
 
     @property
     def database_url(self) -> str:
         if self.prefix_name_base == 'MAUTIC':
-            return f"mysql+pymysql://{self.DB_USER}:{quote(self.DB_PASSWORD)}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_DB_NAME}"
+            return f"mysql+pymysql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_DB_NAME}"
         else:
-            return f"postgres://{self.DB_USER}:{quote(self.DB_PASSWORD)}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_DB_NAME}"
+            return f"postgres://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_DB_NAME}"
+
+
 
 

@@ -32,9 +32,9 @@ class RunAsync(Properties):
         settings = Settings
 
         async with AsyncExitStack() as stack:
-            self.dwh_pool = await stack.enter_async_context(asyncpg.create_pool(dsn=settings('DWH').database_url))
-            self.facade_pool = await stack.enter_async_context(asyncpg.create_pool(dsn=settings('FACADE').database_url))
-            self.facade_pool = await stack.enter_async_context(asyncpg.create_pool(dsn=settings('MAUTIC').database_url))
+            self.dwh_pool = await stack.enter_async_context(asyncpg.create_pool(**settings('DWH').database_connect))
+            self.facade_pool = await stack.enter_async_context(asyncpg.create_pool(**settings('FACADE').database_connect))
+            self.facade_pool = await stack.enter_async_context(asyncpg.create_pool(**settings('MAUTIC').database_connect))
 
             tasks = [self.run()]
             await asyncio.gather(*tasks)
@@ -42,14 +42,19 @@ class RunAsync(Properties):
 
 
 
+async def run():
+    start = time.time()
+    try:
+        run_async = RunAsync()
+        await asyncio.create_task(run_async.main())
+    finally:
+        print('Total time work async... - ', round(time.time() - start), 'seconds.')
+
+
 if __name__ == '__main__':
-    async def run():
-        start = time.time()
-        try:
-            run_async = RunAsync()
-            await asyncio.create_task(run_async.main())
-        finally:
-            print('Total time work async... - ', round(time.time() - start), 'seconds.')
-
-
     asyncio.run(run())
+
+
+def lambda_handler(event=None, context=None):
+    asyncio.run(run())
+    return 0
